@@ -1,42 +1,30 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PenTool, BookOpen, Brain, Users, Shield, Sparkles } from "lucide-react";
-
 const Homepage = () => {
-  const features = [
-    {
-      icon: Brain,
-      title: "Story Memory",
-      description: "Remembers characters, plot line and emotional beats for holistic intelligence."
-    },
-    {
-      icon: PenTool,
-      title: "Writing Agents",
-      description: "Get help with storyboarding, style, research, and revisions from specialized AI assistants."
-    },
-    {
-      icon: Users,
-      title: "Expert Network",
-      description: "Connect with subject matter experts in a variety of fields & industries through Scrib curated marketplace."
-    },
-    {
-      icon: Shield,
-      title: "Privacy First",
-      description: "Your stories are yours. Complete data control with encryption and export options."
-    }
-  ];
-
-  return (
-    <div className="min-h-screen bg-background">
+  const features = [{
+    icon: Brain,
+    title: "Story Memory",
+    description: "Remembers characters, plot line and emotional beats for holistic intelligence."
+  }, {
+    icon: PenTool,
+    title: "Writing Agents",
+    description: "Get help with storyboarding, style, research, and revisions from specialized AI assistants."
+  }, {
+    icon: Users,
+    title: "Expert Network",
+    description: "Connect with subject matter experts in a variety of fields & industries through Scrib curated marketplace."
+  }, {
+    icon: Shield,
+    title: "Privacy First",
+    description: "Your stories are yours. Complete data control with encryption and export options."
+  }];
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <img 
-              src="/lovable-uploads/c4d58183-ee58-4bb9-b2f7-00e2f3bd9ceb.png" 
-              alt="Scrib Logo" 
-              className="h-8 w-auto"
-            />
+            <img src="/lovable-uploads/c4d58183-ee58-4bb9-b2f7-00e2f3bd9ceb.png" alt="Scrib Logo" className="h-8 w-auto" />
           </div>
           <nav className="hidden md:flex items-center space-x-6">
             <a href="#features" className="text-muted-foreground hover:text-primary transition-colors">Features</a>
@@ -51,12 +39,8 @@ const Homepage = () => {
       <section className="py-20 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Your Personalized AI Fiction Writing Assistant
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              Scrib enhances human creativity to empower fiction writers with intelligent tools to assist with brainstorming, drafting, and revising while enhancing psychological depth, emotional acuity, and consistent narrative memory.
-            </p>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Your Personalized Fiction Writing Assistant</h1>
+            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">Scrib enhances human creativity to empower fiction writers with intelligent tools to assist with brainstorming, drafting, and revising while enhancing psychological depth, emotional acuity, and consistent narrative memory.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg">
                 <Sparkles className="mr-2 h-5 w-5" />
@@ -67,9 +51,7 @@ const Homepage = () => {
                 See How It Works
               </Button>
             </div>
-            <p className="text-sm text-muted-foreground mt-4">
-              Free trial • No credit card required • Your stories, your ownership
-            </p>
+            <p className="text-sm text-muted-foreground mt-4">Free trial • No credit card required • Your stories, your ownership</p>
           </div>
         </div>
       </section>
@@ -78,18 +60,12 @@ const Homepage = () => {
       <section id="features" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary">
-              Everything You Need to Craft Compelling Fiction
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              From initial concept to final draft, Scrib provides intelligent support 
-              that grows with your story and respects your creative process.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary">Craft Compelling Fiction</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">From initial concept to final draft, Scrib provides intelligent support that enhances your story and respects your creative process.</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <Card key={index} className="border-2 hover:border-primary/20 transition-all duration-300 hover:shadow-lg group">
+            {features.map((feature, index) => <Card key={index} className="border-2 hover:border-primary/20 transition-all duration-300 hover:shadow-lg group">
                 <CardHeader className="text-center">
                   <div className="mx-auto w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
                     <feature.icon className="h-6 w-6 text-primary" />
@@ -101,8 +77,7 @@ const Homepage = () => {
                     {feature.description}
                   </CardDescription>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -157,12 +132,8 @@ const Homepage = () => {
       {/* CTA Section */}
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
-          <h3 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Transform Your Writing Process?
-          </h3>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Join writers who are creating more emotionally resonant stories with AI that truly understands fiction.
-          </p>
+          <h3 className="text-3xl md:text-4xl font-bold mb-6">Transform Your Writing Process</h3>
+          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">Join writers creating emotionally resonant stories with AI built for fiction.</p>
           <Button size="lg" variant="secondary" className="px-8 py-6 text-lg">
             Start Your Free Trial
           </Button>
@@ -177,11 +148,7 @@ const Homepage = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <img 
-                src="/lovable-uploads/c4d58183-ee58-4bb9-b2f7-00e2f3bd9ceb.png" 
-                alt="Scrib Logo" 
-                className="h-6 w-auto"
-              />
+              <img src="/lovable-uploads/c4d58183-ee58-4bb9-b2f7-00e2f3bd9ceb.png" alt="Scrib Logo" className="h-6 w-auto" />
               <span className="text-muted-foreground">© 2024 Scrib. All rights reserved.</span>
             </div>
             <div className="flex space-x-6 text-sm text-muted-foreground">
@@ -192,8 +159,6 @@ const Homepage = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Homepage;
