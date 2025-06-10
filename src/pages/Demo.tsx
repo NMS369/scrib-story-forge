@@ -41,11 +41,14 @@ const Demo = () => {
   ];
 
   const writingAgents = [
-    { id: 'character', name: 'Character Development Agent', icon: Users, description: 'Develops rich, multi-dimensional characters' },
-    { id: 'plot', name: 'Plot Structure Agent', icon: BookOpen, description: 'Crafts compelling story arcs and pacing' },
-    { id: 'dialogue', name: 'Dialogue Agent', icon: MessageCircle, description: 'Creates authentic, engaging conversations' },
-    { id: 'world', name: 'World-Building Agent', icon: Sparkles, description: 'Builds immersive fictional worlds' },
-    { id: 'style', name: 'Style & Voice Agent', icon: Bot, description: 'Refines writing style and narrative voice' }
+    { id: 'character', name: 'Character Development Agent', icon: Users, description: 'Develops rich, multi-dimensional characters with psychological depth' },
+    { id: 'plot', name: 'Plot Structure Agent', icon: BookOpen, description: 'Crafts compelling story arcs, pacing, and narrative tension' },
+    { id: 'dialogue', name: 'Dialogue Agent', icon: MessageCircle, description: 'Creates authentic, engaging conversations and voice consistency' },
+    { id: 'world', name: 'World-Building Agent', icon: Sparkles, description: 'Builds immersive fictional worlds with consistent rules' },
+    { id: 'style', name: 'Style & Voice Agent', icon: Bot, description: 'Refines writing style, narrative voice, and prose quality' },
+    { id: 'research', name: 'Research Agent', icon: BookOpen, description: 'Provides accurate research and fact-checking for authenticity' },
+    { id: 'emotion', name: 'Emotional Resonance Agent', icon: Heart, description: 'Enhances emotional depth and reader connection' },
+    { id: 'pacing', name: 'Pacing & Tension Agent', icon: TrendingUp, description: 'Optimizes story rhythm and maintains reader engagement' }
   ];
 
   const betaReaders = [
@@ -206,7 +209,7 @@ const Demo = () => {
               <CardContent>
                 <div className="space-y-6">
                   {/* Agent Selection */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     {writingAgents.map((agent) => {
                       const IconComponent = agent.icon;
                       return (
@@ -214,7 +217,7 @@ const Demo = () => {
                           key={agent.id}
                           variant={activeAgent === agent.id ? 'default' : 'outline'}
                           onClick={() => setActiveAgent(agent.id)}
-                          className="h-auto p-4 flex flex-col gap-2"
+                          className="h-auto p-4 flex flex-col gap-2 hover-scale"
                         >
                           <IconComponent className="h-5 w-5" />
                           <span className="text-xs font-medium text-center">{agent.name}</span>
@@ -326,9 +329,75 @@ const Demo = () => {
                             </div>
                           )}
 
-                          <Button variant="outline" className="w-full" disabled>
-                            Apply Suggestions (Demo)
-                          </Button>
+                          {activeAgent === 'research' && (
+                            <div className="space-y-3">
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Historical Accuracy:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "Your 1950s setting needs more authentic details. Consider the limited technology available - no computers, different social norms."
+                                </p>
+                              </div>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Technical Details:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "The library preservation technology described seems advanced for the era. Research period-appropriate methods."
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {activeAgent === 'emotion' && (
+                            <div className="space-y-3">
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Emotional Arc:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "Maya's emotional journey needs more variation. Show her vulnerability before her strength to create deeper reader connection."
+                                </p>
+                              </div>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Reader Impact:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "The loss of knowledge theme is powerful. Add sensory details to help readers feel the weight of what's being lost."
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {activeAgent === 'pacing' && (
+                            <div className="space-y-3">
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Scene Rhythm:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "Chapter 3 moves too quickly. Add a breathing moment between action sequences to let tension build naturally."
+                                </p>
+                              </div>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Tension Maintenance:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "Great job maintaining suspense, but consider raising stakes gradually rather than all at once in the climax."
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          <div className="flex gap-2">
+                            <Button variant="outline" className="flex-1" disabled>
+                              Apply Suggestions (Demo)
+                            </Button>
+                            <Button variant="secondary" className="flex-1" disabled>
+                              Get More Feedback (Demo)
+                            </Button>
+                          </div>
+                          
+                          <div className="bg-primary/5 p-4 rounded-lg mt-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Sparkles className="h-4 w-4 text-primary" />
+                              <span className="text-sm font-medium">AI Collaboration</span>
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                              Each agent specializes in different aspects of storytelling, working together to provide comprehensive feedback tailored to your story's needs.
+                            </p>
+                          </div>
                         </div>
                       );
                     })()}
