@@ -6,8 +6,8 @@ const Homepage = () => {
   const features = [
     {
       icon: Brain,
-      title: "AI Story Memory",
-      description: "Keep track of characters, plot lines, and emotional beats with our intelligent story companion."
+      title: "Story Memory",
+      description: "Remembers characters, plot line and emotional beats for holistic intelligence."
     },
     {
       icon: PenTool,
@@ -17,7 +17,7 @@ const Homepage = () => {
     {
       icon: Users,
       title: "Expert Network",
-      description: "Connect with subject matter experts through our curated marketplace."
+      description: "Connect with subject matter experts in a variety of fields & industries through Scrib curated marketplace."
     },
     {
       icon: Shield,
@@ -52,16 +52,15 @@ const Homepage = () => {
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Your AI Writing Companion for Fiction That Moves Hearts
+              Your Personalized AI Fiction Writing Assistant
             </h1>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              Scrib remembers your story's heart, helps maintain emotional consistency, 
-              and supports your creative process without replacing your unique voice.
+              Scrib enhances human creativity to empower fiction writers with intelligent tools to assist with brainstorming, drafting, and revising while enhancing psychological depth, emotional acuity, and consistent narrative memory.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg">
                 <Sparkles className="mr-2 h-5 w-5" />
-                Start Writing Today
+                Sign Up Now
               </Button>
               <Button variant="outline" size="lg" className="px-8 py-6 text-lg">
                 <BookOpen className="mr-2 h-5 w-5" />
