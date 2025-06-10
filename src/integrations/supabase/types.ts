@@ -45,6 +45,36 @@ export type Database = {
         }
         Relationships: []
       }
+      waitlist: {
+        Row: {
+          created_at: string
+          email: string
+          experience_level: string | null
+          id: string
+          name: string | null
+          referral_source: string | null
+          writing_genre: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          experience_level?: string | null
+          id?: string
+          name?: string | null
+          referral_source?: string | null
+          writing_genre?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          experience_level?: string | null
+          id?: string
+          name?: string | null
+          referral_source?: string | null
+          writing_genre?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

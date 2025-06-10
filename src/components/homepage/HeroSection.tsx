@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Sparkles, BookOpen } from "lucide-react";
+import { Sparkles, BookOpen, Play } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import WaitlistDialog from "@/components/WaitlistDialog";
 
 const HeroSection = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
 
   return (
     <section className="py-20 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
@@ -28,21 +31,31 @@ const HeroSection = () => {
                 <Button 
                   size="lg" 
                   className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg"
-                  onClick={() => navigate('/auth')}
+                  onClick={() => setWaitlistOpen(true)}
                 >
                   <Sparkles className="mr-2 h-5 w-5" />
-                  Sign Up Now
+                  Join Waitlist
                 </Button>
-                <Button variant="outline" size="lg" className="px-8 py-6 text-lg">
-                  <BookOpen className="mr-2 h-5 w-5" />
-                  See How It Works
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="px-8 py-6 text-lg"
+                  onClick={() => navigate('/auth')}
+                >
+                  <Play className="mr-2 h-5 w-5" />
+                  Try Demo
                 </Button>
               </>
             )}
           </div>
-          <p className="text-sm text-muted-foreground mt-4">Free trial • No credit card required • Your stories, your ownership</p>
+          <p className="text-sm text-muted-foreground mt-4">Join 1,000+ writers • Early access • Your stories, your ownership</p>
         </div>
       </div>
+      
+      <WaitlistDialog 
+        open={waitlistOpen} 
+        onOpenChange={setWaitlistOpen} 
+      />
     </section>
   );
 };

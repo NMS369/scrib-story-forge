@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import WaitlistDialog from "@/components/WaitlistDialog";
 
 const CTASection = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
 
   return (
     <section className="py-20 bg-primary text-primary-foreground">
@@ -15,14 +18,19 @@ const CTASection = () => {
           size="lg" 
           variant="secondary" 
           className="px-8 py-6 text-lg"
-          onClick={() => navigate(user ? '/dashboard' : '/auth')}
+          onClick={() => user ? navigate('/dashboard') : setWaitlistOpen(true)}
         >
-          {user ? 'Go to Dashboard' : 'Start Your Free Trial'}
+          {user ? 'Go to Dashboard' : 'Join Waitlist'}
         </Button>
         <p className="text-sm opacity-75 mt-4">
-          14-day free trial • Cancel anytime • Full data export
+          Early access • Be first to know • Your stories, your ownership
         </p>
       </div>
+      
+      <WaitlistDialog 
+        open={waitlistOpen} 
+        onOpenChange={setWaitlistOpen} 
+      />
     </section>
   );
 };
