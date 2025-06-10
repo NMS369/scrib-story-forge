@@ -1,7 +1,30 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { PenTool, BookOpen, Brain, Users, Shield, Sparkles } from "lucide-react";
+import { PenTool, BookOpen, Brain, Users, Shield, Sparkles, LogOut, LogIn } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+
 const Homepage = () => {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (error) {
+      toast({
+        title: "Error signing out",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Signed out",
+        description: "You've been successfully signed out.",
+      });
+    }
+  };
   const features = [{
     icon: Brain,
     title: "Story Memory",
@@ -29,8 +52,24 @@ const Homepage = () => {
           <nav className="hidden md:flex items-center space-x-6">
             <a href="#features" className="text-muted-foreground hover:text-primary transition-colors">Features</a>
             <a href="#pricing" className="text-muted-foreground hover:text-primary transition-colors">Pricing</a>
-            <Button variant="outline" size="sm">Sign In</Button>
-            <Button size="sm">Get Started</Button>
+            {user ? (
+              <>
+                <span className="text-sm text-muted-foreground">Welcome, {user.email}</span>
+                <Button variant="outline" size="sm" onClick={handleSignOut}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign Out
+                </Button>
+                <Button size="sm" onClick={() => navigate('/dashboard')}>Dashboard</Button>
+              </>
+            ) : (
+              <>
+                <Button variant="outline" size="sm" onClick={() => navigate('/auth')}>
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Sign In
+                </Button>
+                <Button size="sm" onClick={() => navigate('/auth')}>Get Started</Button>
+              </>
+            )}
           </nav>
         </div>
       </header>
@@ -42,14 +81,31 @@ const Homepage = () => {
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Your Personalized Fiction Writing Assistant</h1>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">Scrib enhances human creativity to empower fiction writers with intelligent tools to assist with brainstorming, drafting, and revising while enhancing psychological depth, emotional acuity, and consistent narrative memory.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg">
-                <Sparkles className="mr-2 h-5 w-5" />
-                Sign Up Now
-              </Button>
-              <Button variant="outline" size="lg" className="px-8 py-6 text-lg">
-                <BookOpen className="mr-2 h-5 w-5" />
-                See How It Works
-              </Button>
+              {user ? (
+                <Button 
+                  size="lg" 
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg"
+                  onClick={() => navigate('/dashboard')}
+                >
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  Go to Dashboard
+                </Button>
+              ) : (
+                <>
+                  <Button 
+                    size="lg" 
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg"
+                    onClick={() => navigate('/auth')}
+                  >
+                    <Sparkles className="mr-2 h-5 w-5" />
+                    Sign Up Now
+                  </Button>
+                  <Button variant="outline" size="lg" className="px-8 py-6 text-lg">
+                    <BookOpen className="mr-2 h-5 w-5" />
+                    See How It Works
+                  </Button>
+                </>
+              )}
             </div>
             <p className="text-sm text-muted-foreground mt-4">Free trial • No credit card required • Your stories, your ownership</p>
           </div>
@@ -134,8 +190,13 @@ const Homepage = () => {
         <div className="container mx-auto px-4 text-center">
           <h3 className="text-3xl md:text-4xl font-bold mb-6">Transform Your Writing Process</h3>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">Join writers creating emotionally resonant stories with AI built for fiction.</p>
-          <Button size="lg" variant="secondary" className="px-8 py-6 text-lg">
-            Start Your Free Trial
+          <Button 
+            size="lg" 
+            variant="secondary" 
+            className="px-8 py-6 text-lg"
+            onClick={() => navigate(user ? '/dashboard' : '/auth')}
+          >
+            {user ? 'Go to Dashboard' : 'Start Your Free Trial'}
           </Button>
           <p className="text-sm opacity-75 mt-4">
             14-day free trial • Cancel anytime • Full data export
