@@ -1,6 +1,7 @@
 import Header from "./homepage/Header";
 import HeroSection from "./homepage/HeroSection";
 import FeaturesSection from "./homepage/FeaturesSection";
+import TestimonialsSection from "./homepage/TestimonialsSection";
 import PricingSection from "./homepage/PricingSection";
 import BenefitsSection from "./homepage/BenefitsSection";
 import CTASection from "./homepage/CTASection";
@@ -12,6 +13,7 @@ const Homepage = () => {
       <Header />
       <HeroSection />
       <FeaturesSection />
+      <TestimonialsSection />
       <PricingSection />
       <BenefitsSection />
       <CTASection />
