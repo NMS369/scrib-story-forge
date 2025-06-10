@@ -40,7 +40,7 @@ const HeroSection = () => {
                   variant="outline" 
                   size="lg" 
                   className="px-8 py-6 text-lg"
-                  onClick={() => navigate('/auth')}
+                  onClick={() => navigate('/demo')}
                 >
                   <Play className="mr-2 h-5 w-5" />
                   Try Demo
