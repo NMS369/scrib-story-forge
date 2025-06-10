@@ -3,7 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, BookOpen, TrendingUp, Users, Sparkles } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ArrowLeft, BookOpen, TrendingUp, Users, Sparkles, Bot, MessageCircle, Send, Heart, Star, Award, Crown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import WaitlistDialog from "@/components/WaitlistDialog";
 
@@ -11,6 +13,11 @@ const Demo = () => {
   const navigate = useNavigate();
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [activeDemo, setActiveDemo] = useState<'writing' | 'industry' | 'community'>('writing');
+  const [activeAgent, setActiveAgent] = useState('character');
+  const [chatMessage, setChatMessage] = useState('');
+  const [agentChatMessages, setAgentChatMessages] = useState<Array<{sender: string, message: string, time: string}>>([
+    { sender: 'Agent', message: "Hi! I'm Sarah from Literary Partners Inc. I specialize in contemporary fiction. What kind of project are you working on?", time: '2:34 PM' }
+  ]);
 
   const mockStoryData = {
     title: "The Last Library",
@@ -32,6 +39,65 @@ const Demo = () => {
     { name: "Michael Chen", agency: "BookWorld Agency", genre: "Science Fiction", status: "Closed" },
     { name: "Emma Rodriguez", agency: "Creative Minds Literary", genre: "Romance", status: "Open" }
   ];
+
+  const writingAgents = [
+    { id: 'character', name: 'Character Development Agent', icon: Users, description: 'Develops rich, multi-dimensional characters' },
+    { id: 'plot', name: 'Plot Structure Agent', icon: BookOpen, description: 'Crafts compelling story arcs and pacing' },
+    { id: 'dialogue', name: 'Dialogue Agent', icon: MessageCircle, description: 'Creates authentic, engaging conversations' },
+    { id: 'world', name: 'World-Building Agent', icon: Sparkles, description: 'Builds immersive fictional worlds' },
+    { id: 'style', name: 'Style & Voice Agent', icon: Bot, description: 'Refines writing style and narrative voice' }
+  ];
+
+  const betaReaders = [
+    { name: "Alex Chen", genre: "Science Fiction", rating: 4.8, reviews: 23, available: true, bio: "PhD in Physics, loves hard sci-fi with accurate science" },
+    { name: "Maya Patel", genre: "Fantasy Romance", rating: 4.9, reviews: 45, available: true, bio: "Romance author and beta reader with 8+ years experience" },
+    { name: "Jordan Kim", genre: "Literary Fiction", rating: 4.7, reviews: 18, available: false, bio: "MFA graduate, specializes in character-driven narratives" }
+  ];
+
+  const critiquePartners = [
+    { name: "Sam Williams", genre: "Mystery/Thriller", experience: "5 years", status: "Looking for partner", compatibility: 95 },
+    { name: "Emma Davis", genre: "Young Adult", experience: "3 years", status: "Available", compatibility: 88 },
+    { name: "Riley Chen", genre: "Historical Fiction", experience: "7 years", status: "Looking for partner", compatibility: 92 }
+  ];
+
+  const bestsellerLists = [
+    {
+      name: "NY Times Bestsellers",
+      icon: Crown,
+      books: [
+        { title: "Fourth Wing", author: "Rebecca Yarros", genre: "Fantasy Romance", weeks: 12 },
+        { title: "Tomorrow, and Tomorrow, and Tomorrow", author: "Gabrielle Zevin", genre: "Literary Fiction", weeks: 8 }
+      ]
+    },
+    {
+      name: "Amazon Hot New Releases",
+      icon: Star,
+      books: [
+        { title: "The Atlas Six", author: "Olivie Blake", genre: "Dark Academia", weeks: 3 },
+        { title: "Klara and the Sun", author: "Kazuo Ishiguro", genre: "Science Fiction", weeks: 5 }
+      ]
+    },
+    {
+      name: "Indie Bestsellers",
+      icon: Heart,
+      books: [
+        { title: "The Midnight Library", author: "Matt Haig", genre: "Literary Fiction", weeks: 15 },
+        { title: "Project Hail Mary", author: "Andy Weir", genre: "Science Fiction", weeks: 9 }
+      ]
+    }
+  ];
+
+  const sendMessage = () => {
+    if (chatMessage.trim()) {
+      const newMessages = [
+        ...agentChatMessages,
+        { sender: 'You', message: chatMessage, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) },
+        { sender: 'Agent', message: "That sounds fascinating! I'd love to learn more about your protagonist. Based on what you've shared, I think this could be a great fit for our contemporary fiction list. What's the word count you're targeting?", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+      ];
+      setAgentChatMessages(newMessages);
+      setChatMessage('');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -99,14 +165,15 @@ const Demo = () => {
 
         {/* Demo Content Sections */}
         {activeDemo === 'writing' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="space-y-8">
+            {/* Project Overview */}
             <Card>
               <CardHeader>
                 <CardTitle>Your Current Project</CardTitle>
                 <CardDescription>Continue working on your latest story</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
                     <h3 className="font-semibold text-lg">{mockStoryData.title}</h3>
                     <Badge variant="secondary">{mockStoryData.genre}</Badge>
@@ -121,38 +188,151 @@ const Demo = () => {
                       <div className="font-medium">{mockStoryData.chapters}</div>
                     </div>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    Last updated: {mockStoryData.lastUpdated}
+                  <div className="flex flex-col justify-center">
+                    <Button className="w-full" disabled>
+                      Continue Writing (Demo)
+                    </Button>
                   </div>
-                  <Button className="w-full" disabled>
-                    Continue Writing (Demo)
-                  </Button>
                 </div>
               </CardContent>
             </Card>
 
+            {/* Multi-Agent Writing Assistant */}
             <Card>
               <CardHeader>
-                <CardTitle>AI Writing Assistant</CardTitle>
-                <CardDescription>Get intelligent suggestions for your story</CardDescription>
+                <CardTitle>Multi-Agent Writing Assistant</CardTitle>
+                <CardDescription>Collaborate with specialized AI agents to enhance your story</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="bg-muted p-4 rounded-lg">
-                    <p className="text-sm font-medium mb-2">Character Development Suggestion:</p>
-                    <p className="text-sm text-muted-foreground">
-                      "Consider exploring Maya's backstory through a flashback scene. Her mysterious past with the library could add depth to her motivation in Chapter 3."
-                    </p>
+                <div className="space-y-6">
+                  {/* Agent Selection */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                    {writingAgents.map((agent) => {
+                      const IconComponent = agent.icon;
+                      return (
+                        <Button
+                          key={agent.id}
+                          variant={activeAgent === agent.id ? 'default' : 'outline'}
+                          onClick={() => setActiveAgent(agent.id)}
+                          className="h-auto p-4 flex flex-col gap-2"
+                        >
+                          <IconComponent className="h-5 w-5" />
+                          <span className="text-xs font-medium text-center">{agent.name}</span>
+                        </Button>
+                      );
+                    })}
                   </div>
-                  <div className="bg-muted p-4 rounded-lg">
-                    <p className="text-sm font-medium mb-2">Plot Enhancement:</p>
-                    <p className="text-sm text-muted-foreground">
-                      "The pacing in your current chapter could benefit from a tension break. Perhaps a quiet moment of reflection before the climactic discovery?"
-                    </p>
+
+                  {/* Active Agent Content */}
+                  <div className="border rounded-lg p-6 bg-muted/30">
+                    {(() => {
+                      const currentAgent = writingAgents.find(a => a.id === activeAgent);
+                      const IconComponent = currentAgent?.icon || Bot;
+                      
+                      return (
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-primary/10 rounded-lg">
+                              <IconComponent className="h-5 w-5 text-primary" />
+                            </div>
+                            <div>
+                              <h4 className="font-semibold">{currentAgent?.name}</h4>
+                              <p className="text-sm text-muted-foreground">{currentAgent?.description}</p>
+                            </div>
+                          </div>
+                          
+                          {activeAgent === 'character' && (
+                            <div className="space-y-3">
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Character Analysis:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "Maya needs stronger internal motivation. Consider giving her a personal stake in saving the library beyond duty - perhaps a childhood memory or lost love connected to the books."
+                                </p>
+                              </div>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Relationship Dynamics:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "The tension between Maya and the AI guardian could mirror her internal conflict about technology vs. tradition."
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {activeAgent === 'plot' && (
+                            <div className="space-y-3">
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Story Structure:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "Your inciting incident is strong, but consider adding a false victory before the final climax to deepen the emotional impact."
+                                </p>
+                              </div>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Pacing Suggestion:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "Chapter 2 feels rushed. Try adding a quiet character moment to let readers connect with Maya before the next action sequence."
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {activeAgent === 'dialogue' && (
+                            <div className="space-y-3">
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Voice Consistency:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "Maya's dialogue shifts between formal and casual. Choose one voice and stick with it, or use the shifts to show character growth."
+                                </p>
+                              </div>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Dialogue Tag Alternative:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "Instead of 'she said angrily,' try: 'Her words cut through the silence like broken glass.'"
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {activeAgent === 'world' && (
+                            <div className="space-y-3">
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Setting Details:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "The library feels alive but lacks sensory details. What does it smell like? What sounds echo through the halls?"
+                                </p>
+                              </div>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">World Rules:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "Establish clear rules for how the AI guardian works. Consistency in your magic system builds reader trust."
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {activeAgent === 'style' && (
+                            <div className="space-y-3">
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Prose Style:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "Your sentences are well-crafted but consider varying length more. Short, punchy sentences can create tension."
+                                </p>
+                              </div>
+                              <div className="bg-background p-4 rounded-lg border">
+                                <p className="text-sm font-medium mb-2">Voice Enhancement:</p>
+                                <p className="text-sm text-muted-foreground">
+                                  "Your narrative voice has potential. Try leaning into Maya's perspective more - what would she notice that others wouldn't?"
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          <Button variant="outline" className="w-full" disabled>
+                            Apply Suggestions (Demo)
+                          </Button>
+                        </div>
+                      );
+                    })()}
                   </div>
-                  <Button variant="outline" className="w-full" disabled>
-                    Get More Suggestions (Demo)
-                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -165,7 +345,7 @@ const Demo = () => {
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="trends">Publishing Trends</TabsTrigger>
                 <TabsTrigger value="agents">Literary Agents</TabsTrigger>
-                <TabsTrigger value="releases">New Releases</TabsTrigger>
+                <TabsTrigger value="releases">Bestseller Lists</TabsTrigger>
               </TabsList>
               
               <TabsContent value="trends" className="space-y-6">
@@ -208,47 +388,155 @@ const Demo = () => {
               </TabsContent>
 
               <TabsContent value="agents" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Literary Agent Database</CardTitle>
-                    <CardDescription>Find agents actively seeking new clients</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {mockAgents.map((agent, index) => (
-                        <div key={index} className="flex items-center justify-between p-4 bg-muted rounded-lg">
-                          <div>
-                            <h4 className="font-medium">{agent.name}</h4>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Agent List */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Literary Agent Database</CardTitle>
+                      <CardDescription>Connect directly with agents seeking new clients</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {mockAgents.map((agent, index) => (
+                          <div key={index} className="p-4 bg-muted rounded-lg">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="font-medium">{agent.name}</h4>
+                              <Badge variant={agent.status === 'Open' ? 'default' : 'secondary'}>
+                                {agent.status}
+                              </Badge>
+                            </div>
                             <p className="text-sm text-muted-foreground">{agent.agency}</p>
-                            <p className="text-sm text-muted-foreground">Represents: {agent.genre}</p>
+                            <p className="text-sm text-muted-foreground mb-3">Represents: {agent.genre}</p>
+                            <Button 
+                              size="sm" 
+                              className="w-full gap-2" 
+                              disabled={agent.status === 'Closed'}
+                            >
+                              <MessageCircle className="h-4 w-4" />
+                              {agent.status === 'Open' ? 'Start Chat (Demo)' : 'Closed to Queries'}
+                            </Button>
                           </div>
-                          <Badge variant={agent.status === 'Open' ? 'default' : 'secondary'}>
-                            {agent.status} to Queries
-                          </Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Chat Interface */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <MessageCircle className="h-5 w-5" />
+                        Chat with Sarah Johnson
+                      </CardTitle>
+                      <CardDescription>Literary Partners Inc. • Contemporary Fiction</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {/* Chat Messages */}
+                        <ScrollArea className="h-80 w-full border rounded-lg p-4 bg-muted/30">
+                          <div className="space-y-4">
+                            {agentChatMessages.map((msg, index) => (
+                              <div key={index} className={`flex ${msg.sender === 'You' ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`max-w-[80%] rounded-lg p-3 ${
+                                  msg.sender === 'You' 
+                                    ? 'bg-primary text-primary-foreground' 
+                                    : 'bg-background border'
+                                }`}>
+                                  <p className="text-sm">{msg.message}</p>
+                                  <p className="text-xs opacity-70 mt-1">{msg.time}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </ScrollArea>
+
+                        {/* Chat Input */}
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="Type your message..."
+                            value={chatMessage}
+                            onChange={(e) => setChatMessage(e.target.value)}
+                            onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                            className="flex-1"
+                          />
+                          <Button onClick={sendMessage} size="sm" className="gap-2">
+                            <Send className="h-4 w-4" />
+                            Send
+                          </Button>
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                        
+                        <div className="bg-primary/5 p-3 rounded-lg">
+                          <p className="text-xs text-muted-foreground">
+                            💡 Demo Tip: This is a simulation of our real-time agent chat feature. Connect with literary agents instantly!
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               </TabsContent>
 
               <TabsContent value="releases" className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {bestsellerLists.map((list, index) => {
+                    const IconComponent = list.icon;
+                    return (
+                      <Card key={index}>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <IconComponent className="h-5 w-5" />
+                            {list.name}
+                          </CardTitle>
+                          <CardDescription>Current trending books</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-4">
+                            {list.books.map((book, bookIndex) => (
+                              <div key={bookIndex} className="p-4 bg-muted rounded-lg">
+                                <h4 className="font-medium">{book.title}</h4>
+                                <p className="text-sm text-muted-foreground">by {book.author}</p>
+                                <div className="flex items-center justify-between mt-2">
+                                  <Badge variant="outline">{book.genre}</Badge>
+                                  <span className="text-xs text-muted-foreground">
+                                    {book.weeks} weeks on list
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+
+                {/* Agent Info Section */}
                 <Card>
                   <CardHeader>
-                    <CardTitle>Recent Releases to Watch</CardTitle>
-                    <CardDescription>Stay updated with new books in your genre</CardDescription>
+                    <CardTitle>Agents Representing These Authors</CardTitle>
+                    <CardDescription>See which agents represent current bestselling authors</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="p-4 bg-muted rounded-lg">
-                        <h4 className="font-medium">The Seven Moons of Maali Almeida</h4>
-                        <p className="text-sm text-muted-foreground">Literary Fiction • Booker Prize Winner</p>
-                        <p className="text-sm mt-2">A groundbreaking work that blends magical realism with contemporary themes.</p>
+                        <h4 className="font-medium">Rebecca Yarros (Fourth Wing)</h4>
+                        <p className="text-sm text-muted-foreground">Represented by: Louise Fury at The Bent Agency</p>
+                        <p className="text-sm text-muted-foreground mt-1">Specializes in: Romance, Fantasy, Young Adult</p>
                       </div>
                       <div className="p-4 bg-muted rounded-lg">
-                        <h4 className="font-medium">Book Lovers</h4>
-                        <p className="text-sm text-muted-foreground">Romance • Bestseller</p>
-                        <p className="text-sm mt-2">A fresh take on the romance genre that's taking the publishing world by storm.</p>
+                        <h4 className="font-medium">Andy Weir (Project Hail Mary)</h4>
+                        <p className="text-sm text-muted-foreground">Represented by: David Fugate at LaunchBooks Literary</p>
+                        <p className="text-sm text-muted-foreground mt-1">Specializes in: Science Fiction, Thriller</p>
+                      </div>
+                      <div className="p-4 bg-muted rounded-lg">
+                        <h4 className="font-medium">Matt Haig (The Midnight Library)</h4>
+                        <p className="text-sm text-muted-foreground">Represented by: Francis Bickmore at Canongate</p>
+                        <p className="text-sm text-muted-foreground mt-1">Specializes in: Literary Fiction, Mental Health</p>
+                      </div>
+                      <div className="p-4 bg-muted rounded-lg">
+                        <h4 className="font-medium">Gabrielle Zevin (Tomorrow, and Tomorrow, and Tomorrow)</h4>
+                        <p className="text-sm text-muted-foreground">Represented by: Doug Stewart at Sterling Lord Literistic</p>
+                        <p className="text-sm text-muted-foreground mt-1">Specializes in: Literary Fiction, Contemporary</p>
                       </div>
                     </div>
                   </CardContent>
@@ -259,49 +547,248 @@ const Demo = () => {
         )}
 
         {activeDemo === 'community' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Writer Groups</CardTitle>
-                <CardDescription>Connect with writers in your genre</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-4 bg-muted rounded-lg">
-                    <h4 className="font-medium">Sci-Fi Writers United</h4>
-                    <p className="text-sm text-muted-foreground">1,247 members • Active discussions</p>
-                  </div>
-                  <div className="p-4 bg-muted rounded-lg">
-                    <h4 className="font-medium">Romance Authors Circle</h4>
-                    <p className="text-sm text-muted-foreground">892 members • Weekly challenges</p>
-                  </div>
-                  <Button variant="outline" className="w-full" disabled>
-                    Join Groups (Demo)
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="space-y-8">
+            {/* Community Navigation */}
+            <Tabs defaultValue="groups" className="w-full">
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="groups">Writer Groups</TabsTrigger>
+                <TabsTrigger value="beta">Beta Readers</TabsTrigger>
+                <TabsTrigger value="critique">Critique Partners</TabsTrigger>
+                <TabsTrigger value="challenges">Challenges</TabsTrigger>
+              </TabsList>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Writing Challenges</CardTitle>
-                <CardDescription>Participate in community events</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-4 bg-muted rounded-lg">
-                    <h4 className="font-medium">December Flash Fiction</h4>
-                    <p className="text-sm text-muted-foreground">Write a complete story in 500 words</p>
-                    <Badge variant="outline">5 days left</Badge>
-                  </div>
-                  <div className="p-4 bg-muted rounded-lg">
-                    <h4 className="font-medium">Character Development Workshop</h4>
-                    <p className="text-sm text-muted-foreground">Weekly exercises to develop compelling characters</p>
-                    <Badge variant="default">Ongoing</Badge>
-                  </div>
+              <TabsContent value="groups" className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Writer Groups</CardTitle>
+                      <CardDescription>Connect with writers in your genre</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="p-4 bg-muted rounded-lg">
+                          <h4 className="font-medium">Sci-Fi Writers United</h4>
+                          <p className="text-sm text-muted-foreground">1,247 members • Active discussions</p>
+                        </div>
+                        <div className="p-4 bg-muted rounded-lg">
+                          <h4 className="font-medium">Romance Authors Circle</h4>
+                          <p className="text-sm text-muted-foreground">892 members • Weekly challenges</p>
+                        </div>
+                        <div className="p-4 bg-muted rounded-lg">
+                          <h4 className="font-medium">Mystery Writers Guild</h4>
+                          <p className="text-sm text-muted-foreground">564 members • Monthly critiques</p>
+                        </div>
+                        <Button variant="outline" className="w-full" disabled>
+                          Join Groups (Demo)
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Active Discussions</CardTitle>
+                      <CardDescription>Recent conversations in your groups</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="p-4 bg-muted rounded-lg">
+                          <h4 className="font-medium">World-building in Hard Sci-Fi</h4>
+                          <p className="text-sm text-muted-foreground">23 replies • Last activity 2h ago</p>
+                          <p className="text-sm mt-2">Discussion about creating believable future technologies...</p>
+                        </div>
+                        <div className="p-4 bg-muted rounded-lg">
+                          <h4 className="font-medium">Trope Subversion Ideas</h4>
+                          <p className="text-sm text-muted-foreground">18 replies • Last activity 4h ago</p>
+                          <p className="text-sm mt-2">Fresh takes on classic romance tropes...</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-              </CardContent>
-            </Card>
+              </TabsContent>
+
+              <TabsContent value="beta" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Find Beta Readers</CardTitle>
+                    <CardDescription>Professional beta readers for your genre</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {betaReaders.map((reader, index) => (
+                        <div key={index} className="p-4 bg-muted rounded-lg">
+                          <div className="flex items-center justify-between mb-3">
+                            <h4 className="font-medium">{reader.name}</h4>
+                            <div className="flex items-center gap-1">
+                              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                              <span className="text-sm font-medium">{reader.rating}</span>
+                            </div>
+                          </div>
+                          <Badge variant="outline" className="mb-2">{reader.genre}</Badge>
+                          <p className="text-sm text-muted-foreground mb-3">{reader.bio}</p>
+                          <div className="flex items-center justify-between mb-3">
+                            <span className="text-sm text-muted-foreground">{reader.reviews} reviews</span>
+                            <Badge variant={reader.available ? 'default' : 'secondary'}>
+                              {reader.available ? 'Available' : 'Busy'}
+                            </Badge>
+                          </div>
+                          <Button 
+                            size="sm" 
+                            className="w-full" 
+                            disabled={!reader.available}
+                          >
+                            {reader.available ? 'Request Beta Read (Demo)' : 'Currently Unavailable'}
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="critique" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Critique Partner Matching</CardTitle>
+                    <CardDescription>Find compatible critique partners based on your writing style and genre</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      {critiquePartners.map((partner, index) => (
+                        <div key={index} className="p-6 bg-muted rounded-lg">
+                          <div className="flex items-center justify-between mb-4">
+                            <div>
+                              <h4 className="font-medium">{partner.name}</h4>
+                              <p className="text-sm text-muted-foreground">{partner.genre} • {partner.experience} experience</p>
+                            </div>
+                            <div className="text-center">
+                              <div className="text-2xl font-bold text-primary">{partner.compatibility}%</div>
+                              <div className="text-xs text-muted-foreground">Match</div>
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <Badge variant="outline">{partner.status}</Badge>
+                            <Button size="sm" className="gap-2">
+                              <MessageCircle className="h-4 w-4" />
+                              Connect (Demo)
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                      
+                      <div className="text-center p-6 bg-primary/5 rounded-lg">
+                        <h4 className="font-medium mb-2">Perfect Match Algorithm</h4>
+                        <p className="text-sm text-muted-foreground">Our AI matches you with critique partners based on writing style, genre preferences, experience level, and feedback style.</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="challenges" className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Active Challenges</CardTitle>
+                      <CardDescription>Participate in community writing events</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="p-4 bg-muted rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium">December Flash Fiction</h4>
+                            <Badge variant="outline">5 days left</Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-3">Write a complete story in 500 words</p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">142 participants</span>
+                            <Button size="sm" disabled>Join Challenge (Demo)</Button>
+                          </div>
+                        </div>
+                        <div className="p-4 bg-muted rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium">Character Development Workshop</h4>
+                            <Badge variant="default">Ongoing</Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-3">Weekly exercises to develop compelling characters</p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">89 participants</span>
+                            <Button size="sm" disabled>Join Workshop (Demo)</Button>
+                          </div>
+                        </div>
+                        <div className="p-4 bg-muted rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium">Daily Writing Streak</h4>
+                            <Badge variant="secondary">Your Streak: 7 days</Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-3">Write at least 250 words every day</p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">1,247 active streakers</span>
+                            <Button size="sm" disabled>Log Today's Words (Demo)</Button>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Leaderboards</CardTitle>
+                      <CardDescription>See how you rank against other writers</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="p-4 bg-muted rounded-lg">
+                          <h4 className="font-medium mb-3">Flash Fiction Winners</h4>
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Crown className="h-4 w-4 text-yellow-500" />
+                                <span className="text-sm">Sarah_Writes</span>
+                              </div>
+                              <span className="text-sm text-muted-foreground">487 votes</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Award className="h-4 w-4 text-gray-400" />
+                                <span className="text-sm">NovelDreamer</span>
+                              </div>
+                              <span className="text-sm text-muted-foreground">423 votes</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Award className="h-4 w-4 text-orange-400" />
+                                <span className="text-sm">WordSmith_99</span>
+                              </div>
+                              <span className="text-sm text-muted-foreground">398 votes</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="p-4 bg-muted rounded-lg">
+                          <h4 className="font-medium mb-3">Writing Streak Champions</h4>
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm">DailyPenPusher</span>
+                              <span className="text-sm text-muted-foreground">365 days</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm">WriteOrDie</span>
+                              <span className="text-sm text-muted-foreground">289 days</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm">StoryAddict</span>
+                              <span className="text-sm text-muted-foreground">234 days</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         )}
 
