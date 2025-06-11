@@ -456,10 +456,9 @@ const Demo = () => {
               
               {/* Progress Indicator */}
               <div className="flex items-center justify-center gap-4 mt-6">
-                <div className={`flex items-center gap-2 ${researchStep === 'input' ? 'text-primary' : researchStep !== 'input' ? 'text-green-600' : 'text-muted-foreground'}`}>
+                <div className={`flex items-center gap-2 ${researchStep === 'input' ? 'text-primary' : 'text-green-600'}`}>
                   <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-medium ${
-                    researchStep === 'input' ? 'border-primary bg-primary/10' : 
-                    researchStep !== 'input' ? 'border-green-600 bg-green-600/10' : 'border-muted-foreground'
+                    researchStep === 'input' ? 'border-primary bg-primary/10' : 'border-green-600 bg-green-600/10'
                   }`}>
                     1
                   </div>
@@ -553,6 +552,12 @@ const Demo = () => {
                 <ResearchChat selectedAgent={selectedAgent} />
               </div>
             )}
+          </div>
+        )}
+
+        {activeDemo === 'industry' && (
+          <div className="space-y-8">
+            <Tabs defaultValue="trends" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="trends">Publishing Trends</TabsTrigger>
                 <TabsTrigger value="agents">Literary Agents</TabsTrigger>
