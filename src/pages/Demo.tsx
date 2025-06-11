@@ -151,7 +151,15 @@ const Demo = () => {
               <ArrowLeft className="h-4 w-4" />
               Back to Home
             </Button>
-            <h1 className="text-2xl font-bold">Scrib Demo Experience</h1>
+            <img 
+              src="./lovable-uploads/c4d58183-ee58-4bb9-b2f7-00e2f3bd9ceb.png" 
+              alt="Scrib Logo" 
+              className="h-8 w-auto" 
+              onError={(e) => {
+                console.warn('Demo header logo failed to load');
+                e.currentTarget.style.display = 'none';
+              }}
+            />
           </div>
           <Button
             onClick={() => setWaitlistOpen(true)}
