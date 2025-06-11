@@ -24,7 +24,7 @@ const Demo = () => {
   ]);
 
   // Research Assistant State
-  const [researchStep, setResearchStep] = useState<'input' | 'analysis' | 'agents' | 'chat'>('input');
+  const [researchStep, setResearchStep] = useState<'input' | 'analysis' | 'agents'>('input');
   const [storyData, setStoryData] = useState<any>(null);
   const [selectedAgent, setSelectedAgent] = useState<any>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -126,7 +126,7 @@ const Demo = () => {
 
   const handleAgentSelect = (agent: any) => {
     setSelectedAgent(agent);
-    setResearchStep('chat');
+    // Agent selection now opens the ResearchChat component within the agents step
   };
 
   const resetResearchFlow = () => {
@@ -462,42 +462,30 @@ const Demo = () => {
                   }`}>
                     1
                   </div>
-                  <span className="hidden sm:inline">Story Input</span>
+                  <span className="hidden sm:inline">Story Details</span>
                 </div>
                 
-                <div className="w-8 h-px bg-border"></div>
+                <div className="w-8 h-0.5 bg-border"></div>
                 
-                <div className={`flex items-center gap-2 ${researchStep === 'analysis' ? 'text-primary' : ['agents', 'chat'].includes(researchStep) ? 'text-green-600' : 'text-muted-foreground'}`}>
+                <div className={`flex items-center gap-2 ${researchStep === 'analysis' ? 'text-primary' : researchStep === 'agents' ? 'text-green-600' : 'text-muted-foreground'}`}>
                   <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-medium ${
                     researchStep === 'analysis' ? 'border-primary bg-primary/10' : 
-                    ['agents', 'chat'].includes(researchStep) ? 'border-green-600 bg-green-600/10' : 'border-muted-foreground'
+                    researchStep === 'agents' ? 'border-green-600 bg-green-600/10' : 'border-muted-foreground'
                   }`}>
                     2
                   </div>
                   <span className="hidden sm:inline">AI Analysis</span>
                 </div>
                 
-                <div className="w-8 h-px bg-border"></div>
+                <div className="w-8 h-0.5 bg-border"></div>
                 
-                <div className={`flex items-center gap-2 ${researchStep === 'agents' ? 'text-primary' : researchStep === 'chat' ? 'text-green-600' : 'text-muted-foreground'}`}>
+                <div className={`flex items-center gap-2 ${researchStep === 'agents' ? 'text-primary' : 'text-muted-foreground'}`}>
                   <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-medium ${
-                    researchStep === 'agents' ? 'border-primary bg-primary/10' : 
-                    researchStep === 'chat' ? 'border-green-600 bg-green-600/10' : 'border-muted-foreground'
+                    researchStep === 'agents' ? 'border-primary bg-primary/10' : 'border-muted-foreground'
                   }`}>
                     3
                   </div>
                   <span className="hidden sm:inline">Agent Research</span>
-                </div>
-                
-                <div className="w-8 h-px bg-border"></div>
-                
-                <div className={`flex items-center gap-2 ${researchStep === 'chat' ? 'text-primary' : 'text-muted-foreground'}`}>
-                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-medium ${
-                    researchStep === 'chat' ? 'border-primary bg-primary/10' : 'border-muted-foreground'
-                  }`}>
-                    4
-                  </div>
-                  <span className="hidden sm:inline">Interactive Research</span>
                 </div>
               </div>
             </div>
@@ -528,237 +516,29 @@ const Demo = () => {
                   <Button variant="outline" onClick={() => setResearchStep('analysis')}>
                     ← Back to Analysis
                   </Button>
-                  <Button variant="outline" onClick={() => setResearchStep('chat')}>
-                    Skip to Research Chat →
-                  </Button>
-                </div>
-                <AgentDatabase 
-                  storyGenre={storyData?.genre} 
-                  onAgentSelect={handleAgentSelect}
-                />
-              </div>
-            )}
-
-            {researchStep === 'chat' && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <Button variant="outline" onClick={() => setResearchStep('agents')}>
-                    ← Back to Agent Database
-                  </Button>
                   <Button variant="outline" onClick={resetResearchFlow}>
                     Start New Research
                   </Button>
                 </div>
-                <ResearchChat selectedAgent={selectedAgent} />
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Agent Database */}
+                  <div>
+                    <AgentDatabase 
+                      storyGenre={storyData?.genre} 
+                      onAgentSelect={handleAgentSelect}
+                    />
+                  </div>
+                  
+                  {/* Research Chat - Shows when agent is selected */}
+                  {selectedAgent && (
+                    <div>
+                      <ResearchChat selectedAgent={selectedAgent} />
+                    </div>
+                  )}
+                </div>
               </div>
             )}
-          </div>
-        )}
-
-        {activeDemo === 'industry' && (
-          <div className="space-y-8">
-            <Tabs defaultValue="trends" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="trends">Publishing Trends</TabsTrigger>
-                <TabsTrigger value="agents">Literary Agents</TabsTrigger>
-                <TabsTrigger value="releases">Bestseller Lists</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="trends" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Genre Performance This Quarter</CardTitle>
-                    <CardDescription>Track what's trending in the publishing world</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {mockTrends.map((trend, index) => (
-                        <div key={index} className="flex items-center justify-between p-4 bg-muted rounded-lg">
-                          <div>
-                            <h4 className="font-medium">{trend.genre}</h4>
-                            <p className="text-sm text-muted-foreground">Market interest</p>
-                          </div>
-                          <div className="text-right">
-                            <div className={`font-semibold ${
-                              trend.status === 'rising' || trend.status === 'hot' 
-                                ? 'text-green-600' 
-                                : trend.status === 'declining' 
-                                ? 'text-red-600' 
-                                : 'text-muted-foreground'
-                            }`}>
-                              {trend.change}
-                            </div>
-                            <Badge variant={
-                              trend.status === 'hot' ? 'destructive' :
-                              trend.status === 'rising' ? 'default' :
-                              trend.status === 'declining' ? 'secondary' : 'outline'
-                            }>
-                              {trend.status}
-                            </Badge>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="agents" className="space-y-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* Agent List */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Literary Agent Database</CardTitle>
-                      <CardDescription>Connect directly with agents seeking new clients</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {mockAgents.map((agent, index) => (
-                          <div key={index} className="p-4 bg-muted rounded-lg">
-                            <div className="flex items-center justify-between mb-2">
-                              <h4 className="font-medium">{agent.name}</h4>
-                              <Badge variant={agent.status === 'Open' ? 'default' : 'secondary'}>
-                                {agent.status}
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-muted-foreground">{agent.agency}</p>
-                            <p className="text-sm text-muted-foreground mb-3">Represents: {agent.genre}</p>
-                            <Button 
-                              size="sm" 
-                              className="w-full gap-2" 
-                              disabled={agent.status === 'Closed'}
-                            >
-                              <MessageCircle className="h-4 w-4" />
-                              {agent.status === 'Open' ? 'Start Chat (Demo)' : 'Closed to Queries'}
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Chat Interface */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <MessageCircle className="h-5 w-5" />
-                        Chat with Sarah Johnson
-                      </CardTitle>
-                      <CardDescription>Literary Partners Inc. • Contemporary Fiction</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {/* Chat Messages */}
-                        <ScrollArea className="h-80 w-full border rounded-lg p-4 bg-muted/30">
-                          <div className="space-y-4">
-                            {agentChatMessages.map((msg, index) => (
-                              <div key={index} className={`flex ${msg.sender === 'You' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[80%] rounded-lg p-3 ${
-                                  msg.sender === 'You' 
-                                    ? 'bg-primary text-primary-foreground' 
-                                    : 'bg-background border'
-                                }`}>
-                                  <p className="text-sm">{msg.message}</p>
-                                  <p className="text-xs opacity-70 mt-1">{msg.time}</p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </ScrollArea>
-
-                        {/* Chat Input */}
-                        <div className="flex gap-2">
-                          <Input
-                            placeholder="Type your message..."
-                            value={chatMessage}
-                            onChange={(e) => setChatMessage(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                            className="flex-1"
-                          />
-                          <Button onClick={sendMessage} size="sm" className="gap-2">
-                            <Send className="h-4 w-4" />
-                            Send
-                          </Button>
-                        </div>
-                        
-                        <div className="bg-primary/5 p-3 rounded-lg">
-                          <p className="text-xs text-muted-foreground">
-                            💡 Demo Tip: This is a simulation of our real-time agent chat feature. Connect with literary agents instantly!
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="releases" className="space-y-6">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {bestsellerLists.map((list, index) => {
-                    const IconComponent = list.icon;
-                    return (
-                      <Card key={index}>
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2">
-                            <IconComponent className="h-5 w-5" />
-                            {list.name}
-                          </CardTitle>
-                          <CardDescription>Current trending books</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-4">
-                            {list.books.map((book, bookIndex) => (
-                              <div key={bookIndex} className="p-4 bg-muted rounded-lg">
-                                <h4 className="font-medium">{book.title}</h4>
-                                <p className="text-sm text-muted-foreground">by {book.author}</p>
-                                <div className="flex items-center justify-between mt-2">
-                                  <Badge variant="outline">{book.genre}</Badge>
-                                  <span className="text-xs text-muted-foreground">
-                                    {book.weeks} weeks on list
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-
-                {/* Agent Info Section */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Agents Representing These Authors</CardTitle>
-                    <CardDescription>See which agents represent current bestselling authors</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="p-4 bg-muted rounded-lg">
-                        <h4 className="font-medium">Rebecca Yarros (Fourth Wing)</h4>
-                        <p className="text-sm text-muted-foreground">Represented by: Louise Fury at The Bent Agency</p>
-                        <p className="text-sm text-muted-foreground mt-1">Specializes in: Romance, Fantasy, Young Adult</p>
-                      </div>
-                      <div className="p-4 bg-muted rounded-lg">
-                        <h4 className="font-medium">Andy Weir (Project Hail Mary)</h4>
-                        <p className="text-sm text-muted-foreground">Represented by: David Fugate at LaunchBooks Literary</p>
-                        <p className="text-sm text-muted-foreground mt-1">Specializes in: Science Fiction, Thriller</p>
-                      </div>
-                      <div className="p-4 bg-muted rounded-lg">
-                        <h4 className="font-medium">Matt Haig (The Midnight Library)</h4>
-                        <p className="text-sm text-muted-foreground">Represented by: Francis Bickmore at Canongate</p>
-                        <p className="text-sm text-muted-foreground mt-1">Specializes in: Literary Fiction, Mental Health</p>
-                      </div>
-                      <div className="p-4 bg-muted rounded-lg">
-                        <h4 className="font-medium">Gabrielle Zevin (Tomorrow, and Tomorrow, and Tomorrow)</h4>
-                        <p className="text-sm text-muted-foreground">Represented by: Doug Stewart at Sterling Lord Literistic</p>
-                        <p className="text-sm text-muted-foreground mt-1">Specializes in: Literary Fiction, Contemporary</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
           </div>
         )}
 
