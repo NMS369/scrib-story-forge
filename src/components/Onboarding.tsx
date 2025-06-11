@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 
 const Onboarding = () => {
+  console.log('Onboarding component mounting...');
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
@@ -366,9 +367,13 @@ const Onboarding = () => {
         <CardHeader>
           <div className="flex items-center justify-between mb-4">
             <img 
-              src="/lovable-uploads/c4d58183-ee58-4bb9-b2f7-00e2f3bd9ceb.png" 
+              src="./lovable-uploads/c4d58183-ee58-4bb9-b2f7-00e2f3bd9ceb.png" 
               alt="Scrib Logo" 
               className="h-8 w-auto"
+              onError={(e) => {
+                console.warn('Onboarding logo failed to load');
+                e.currentTarget.style.display = 'none';
+              }}
             />
             <Badge variant="outline">Step {currentStep} of {totalSteps}</Badge>
           </div>

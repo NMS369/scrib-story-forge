@@ -5,6 +5,7 @@ import Onboarding from "@/components/Onboarding";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
+  console.log('Index component mounting...');
   const [currentView, setCurrentView] = useState<'homepage' | 'onboarding' | 'dashboard'>('homepage');
 
   // Demo navigation for prototype

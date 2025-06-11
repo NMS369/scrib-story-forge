@@ -8,6 +8,7 @@ import CTASection from "./homepage/CTASection";
 import Footer from "./homepage/Footer";
 
 const Homepage = () => {
+  console.log('Homepage component mounting...');
   return (
     <div className="min-h-screen bg-background">
       <Header />

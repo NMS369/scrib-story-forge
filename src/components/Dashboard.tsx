@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 const Dashboard = () => {
+  console.log('Dashboard component mounting...');
   const projects = [
     {
       title: "The Midnight Garden",
@@ -84,9 +85,13 @@ const Dashboard = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <img 
-                src="/lovable-uploads/c4d58183-ee58-4bb9-b2f7-00e2f3bd9ceb.png" 
+                src="./lovable-uploads/c4d58183-ee58-4bb9-b2f7-00e2f3bd9ceb.png" 
                 alt="Scrib Logo" 
                 className="h-8 w-auto"
+                onError={(e) => {
+                  console.warn('Dashboard logo failed to load');
+                  e.currentTarget.style.display = 'none';
+                }}
               />
               <h1 className="text-2xl font-bold text-primary">Writer's Dashboard</h1>
             </div>
