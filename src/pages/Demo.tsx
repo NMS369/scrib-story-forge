@@ -8,6 +8,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowLeft, BookOpen, TrendingUp, Users, Sparkles, Bot, MessageCircle, Send, Heart, Star, Award, Crown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import WaitlistDialog from "@/components/WaitlistDialog";
+import { StoryInputForm } from "@/components/research/StoryInputForm";
+import { AIAnalysis } from "@/components/research/AIAnalysis";
+import { AgentDatabase } from "@/components/research/AgentDatabase";
+import { ResearchChat } from "@/components/research/ResearchChat";
 
 const Demo = () => {
   const navigate = useNavigate();
@@ -18,6 +22,12 @@ const Demo = () => {
   const [agentChatMessages, setAgentChatMessages] = useState<Array<{sender: string, message: string, time: string}>>([
     { sender: 'Agent', message: "Hi! I'm Sarah from Literary Partners Inc. I specialize in contemporary fiction. What kind of project are you working on?", time: '2:34 PM' }
   ]);
+
+  // Research Assistant State
+  const [researchStep, setResearchStep] = useState<'input' | 'analysis' | 'agents' | 'chat'>('input');
+  const [storyData, setStoryData] = useState<any>(null);
+  const [selectedAgent, setSelectedAgent] = useState<any>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const mockStoryData = {
     title: "The Last Library",
@@ -102,6 +112,30 @@ const Demo = () => {
     }
   };
 
+  // Research Assistant Functions
+  const handleStoryAnalyze = (data: any) => {
+    setStoryData(data);
+    setIsAnalyzing(true);
+    
+    // Simulate AI analysis
+    setTimeout(() => {
+      setIsAnalyzing(false);
+      setResearchStep('analysis');
+    }, 2000);
+  };
+
+  const handleAgentSelect = (agent: any) => {
+    setSelectedAgent(agent);
+    setResearchStep('chat');
+  };
+
+  const resetResearchFlow = () => {
+    setResearchStep('input');
+    setStoryData(null);
+    setSelectedAgent(null);
+    setIsAnalyzing(false);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -149,11 +183,14 @@ const Demo = () => {
             </Button>
             <Button
               variant={activeDemo === 'industry' ? 'default' : 'outline'}
-              onClick={() => setActiveDemo('industry')}
+              onClick={() => {
+                setActiveDemo('industry');
+                resetResearchFlow();
+              }}
               className="gap-2"
             >
               <TrendingUp className="h-4 w-4" />
-              Industry Agent
+              AI Agent Research
             </Button>
             <Button
               variant={activeDemo === 'community' ? 'default' : 'outline'}
@@ -410,7 +447,112 @@ const Demo = () => {
 
         {activeDemo === 'industry' && (
           <div className="space-y-8">
-            <Tabs defaultValue="trends" className="w-full">
+            {/* Research Assistant Header */}
+            <div className="text-center space-y-4">
+              <h2 className="text-2xl font-bold">AI-Powered Agent Research Assistant</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Get intelligent manuscript analysis, personalized agent recommendations, and deep research into literary agents' preferences and recent deals.
+              </p>
+              
+              {/* Progress Indicator */}
+              <div className="flex items-center justify-center gap-4 mt-6">
+                <div className={`flex items-center gap-2 ${researchStep === 'input' ? 'text-primary' : researchStep !== 'input' ? 'text-green-600' : 'text-muted-foreground'}`}>
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-medium ${
+                    researchStep === 'input' ? 'border-primary bg-primary/10' : 
+                    researchStep !== 'input' ? 'border-green-600 bg-green-600/10' : 'border-muted-foreground'
+                  }`}>
+                    1
+                  </div>
+                  <span className="hidden sm:inline">Story Input</span>
+                </div>
+                
+                <div className="w-8 h-px bg-border"></div>
+                
+                <div className={`flex items-center gap-2 ${researchStep === 'analysis' ? 'text-primary' : ['agents', 'chat'].includes(researchStep) ? 'text-green-600' : 'text-muted-foreground'}`}>
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-medium ${
+                    researchStep === 'analysis' ? 'border-primary bg-primary/10' : 
+                    ['agents', 'chat'].includes(researchStep) ? 'border-green-600 bg-green-600/10' : 'border-muted-foreground'
+                  }`}>
+                    2
+                  </div>
+                  <span className="hidden sm:inline">AI Analysis</span>
+                </div>
+                
+                <div className="w-8 h-px bg-border"></div>
+                
+                <div className={`flex items-center gap-2 ${researchStep === 'agents' ? 'text-primary' : researchStep === 'chat' ? 'text-green-600' : 'text-muted-foreground'}`}>
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-medium ${
+                    researchStep === 'agents' ? 'border-primary bg-primary/10' : 
+                    researchStep === 'chat' ? 'border-green-600 bg-green-600/10' : 'border-muted-foreground'
+                  }`}>
+                    3
+                  </div>
+                  <span className="hidden sm:inline">Agent Research</span>
+                </div>
+                
+                <div className="w-8 h-px bg-border"></div>
+                
+                <div className={`flex items-center gap-2 ${researchStep === 'chat' ? 'text-primary' : 'text-muted-foreground'}`}>
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-medium ${
+                    researchStep === 'chat' ? 'border-primary bg-primary/10' : 'border-muted-foreground'
+                  }`}>
+                    4
+                  </div>
+                  <span className="hidden sm:inline">Interactive Research</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Research Assistant Content */}
+            {researchStep === 'input' && (
+              <StoryInputForm onAnalyze={handleStoryAnalyze} isAnalyzing={isAnalyzing} />
+            )}
+
+            {researchStep === 'analysis' && storyData && (
+              <div className="space-y-6">
+                <AIAnalysis storyData={storyData} />
+                <div className="flex gap-4 justify-center">
+                  <Button variant="outline" onClick={resetResearchFlow}>
+                    Start Over
+                  </Button>
+                  <Button onClick={() => setResearchStep('agents')} className="gap-2">
+                    <Users className="h-4 w-4" />
+                    Browse Agent Database
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {researchStep === 'agents' && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <Button variant="outline" onClick={() => setResearchStep('analysis')}>
+                    ← Back to Analysis
+                  </Button>
+                  <Button variant="outline" onClick={() => setResearchStep('chat')}>
+                    Skip to Research Chat →
+                  </Button>
+                </div>
+                <AgentDatabase 
+                  storyGenre={storyData?.genre} 
+                  onAgentSelect={handleAgentSelect}
+                />
+              </div>
+            )}
+
+            {researchStep === 'chat' && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <Button variant="outline" onClick={() => setResearchStep('agents')}>
+                    ← Back to Agent Database
+                  </Button>
+                  <Button variant="outline" onClick={resetResearchFlow}>
+                    Start New Research
+                  </Button>
+                </div>
+                <ResearchChat selectedAgent={selectedAgent} />
+              </div>
+            )}
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="trends">Publishing Trends</TabsTrigger>
                 <TabsTrigger value="agents">Literary Agents</TabsTrigger>
